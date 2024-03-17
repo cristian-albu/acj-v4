@@ -1,3 +1,4 @@
+"use client";
 import { MEDIA_QUERIES, PAGE_MAX_WIDTH } from "@/lib/constants";
 import React, { FC } from "react";
 import styled from "styled-components";

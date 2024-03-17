@@ -1,6 +1,7 @@
 import React from "react";
-import { homepageData } from "@/data/homepage-data";
+
 import HomeView from "@/views/home/HomeView";
+import { homepageData } from "@/data/page-data/homepage-data";
 
 export const metadata = homepageData.metadata;
 
