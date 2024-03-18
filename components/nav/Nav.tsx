@@ -5,6 +5,7 @@ import Link from "next/link";
 import React, { FC } from "react";
 import styled from "styled-components";
 import { Menu } from "..";
+import { MEDIA_QUERIES } from "@/lib/constants";
 
 type T_Nav = { navData: T_NavData } & React.HTMLAttributes<HTMLElement>;
 
@@ -18,7 +19,7 @@ const Nav: FC<T_Nav> = ({ navData, ...rest }) => {
         {navData.main.label}
       </NavItem>
 
-      {viewportWidth && viewportWidth >= 768 ? (
+      {viewportWidth && viewportWidth >= MEDIA_QUERIES.md ? (
         <NavList items={navData.items} />
       ) : (
         <Menu>{navData.itemsIcon || navData.itemsLabel}</Menu>
