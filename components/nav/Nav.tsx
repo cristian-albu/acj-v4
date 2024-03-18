@@ -6,6 +6,7 @@ import React, { FC } from "react";
 import styled from "styled-components";
 import { MEDIA_QUERIES } from "@/lib/constants";
 import { Modal } from "..";
+import { HiOutlineBars3CenterLeft } from "react-icons/hi2";
 
 type T_Nav = { navData: T_NavData } & React.HTMLAttributes<HTMLElement>;
 
@@ -28,7 +29,7 @@ const Nav: FC<T_Nav> = ({ navData, ...rest }) => {
           contentsTitle="Some modal 2"
           contents={<NavList items={navData.items} />}
         >
-          <MenuSpan>{navData.itemsIcon || navData.itemsLabel}</MenuSpan>
+          <MenuSpan>{<HiOutlineBars3CenterLeft size={"1.2rem"} />}</MenuSpan>
         </Modal>
       )}
     </NavElement>

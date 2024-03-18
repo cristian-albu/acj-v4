@@ -19,8 +19,6 @@ export type T_NavItem = {
 
 export type T_NavData = {
   main: T_NavItem;
-  itemsLabel: string;
-  itemsIcon?: T_Icon;
   items: T_NavItem[];
 };
 
@@ -30,8 +28,6 @@ export const navData: T_NavData = {
     path: "/",
     icon: <HiOutlineHomeModern />,
   },
-  itemsIcon: <HiOutlineBars3CenterLeft />,
-  itemsLabel: "Menu",
   items: [
     {
       label: "Projects",
