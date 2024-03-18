@@ -10,19 +10,19 @@ const WrapperElement = styled.div`
   align-items: center;
   justify-content: center;
   @media (max-width: ${MEDIA_QUERIES.xl}px) {
-    max-width: ${PAGE_MAX_WIDTH.xl};
+    max-width: ${PAGE_MAX_WIDTH.xl}px;
   }
   @media (max-width: ${MEDIA_QUERIES.lg}px) {
-    max-width: ${PAGE_MAX_WIDTH.lg};
+    max-width: ${PAGE_MAX_WIDTH.lg}px;
   }
   @media (max-width: ${MEDIA_QUERIES.md}px) {
-    max-width: ${PAGE_MAX_WIDTH.md};
+    max-width: ${PAGE_MAX_WIDTH.md}px;
   }
   @media (max-width: ${MEDIA_QUERIES.sm}px) {
-    max-width: ${PAGE_MAX_WIDTH.sm};
+    max-width: ${PAGE_MAX_WIDTH.sm}px;
   }
   @media (max-width: ${MEDIA_QUERIES.lg}px) {
-    max-width: ${PAGE_MAX_WIDTH.lg};
+    max-width: ${PAGE_MAX_WIDTH.lg}px;
   }
 `;
 

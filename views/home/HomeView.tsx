@@ -1,8 +1,6 @@
 "use client";
-import { Button, Container, Section, Wrapper } from "@/components";
-import Modal from "@/components/modal/Modal";
+import { Button, Container, Modal, Section, Wrapper } from "@/components";
 import { T_HomepageData } from "@/data/page-data/homepage-data";
-
 import React, { FC } from "react";
 
 const SomeItem = () => {
@@ -21,7 +19,28 @@ const HomeView: FC<T_HomepageData> = ({ title }) => {
         <Container>
           {title}
 
-          <Modal contentsTitle="Some modal" contents={<SomeItem />}>
+          <br />
+          <br />
+          <br />
+          <br />
+          <Modal
+            modalType="menu"
+            contentsTitle="Some modal 2"
+            contents={<SomeItem />}
+          >
+            Menu
+          </Modal>
+
+          <br />
+          <br />
+          <br />
+          <br />
+
+          <Modal
+            modalType="popup"
+            contentsTitle="Some modal"
+            contents={<SomeItem />}
+          >
             Modal
           </Modal>
         </Container>

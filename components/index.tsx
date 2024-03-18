@@ -6,6 +6,6 @@ import Card from "./card/Card";
 import Footer from "./footer/Footer";
 import Nav from "./nav/Nav";
 import Title from "./title/Title";
-import Menu from "./menu/Menu";
+import Modal from "./modal/Modal";
 
-export { Container, Wrapper, Section, Button, Card, Footer, Nav, Title, Menu };
+export { Container, Wrapper, Section, Button, Card, Footer, Nav, Title, Modal };

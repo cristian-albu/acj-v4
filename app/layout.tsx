@@ -13,7 +13,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className} suppressHydrationWarning={true}>
+      <body
+        className={inter.className}
+        suppressHydrationWarning={true}
+        style={{
+          maxWidth: "100vw",
+          overflowX: "hidden",
+        }}
+      >
         <StyledComponentsRegistry>
           <Nav navData={navData} />
           {children}

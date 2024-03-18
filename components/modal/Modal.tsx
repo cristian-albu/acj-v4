@@ -2,9 +2,19 @@
 import React, { FC, useEffect, useId, useRef, useState } from "react";
 import { Button } from "..";
 import { T_Children } from "@/lib/types";
-import ModalPortal from "./ModalPortal";
+import Popup from "./Popup";
+import Menu from "./Menu";
+import { createPortal } from "react-dom";
+import styled from "styled-components";
 
-const Modal: FC<T_Modal> = ({ children, contents, contentsTitle, onClose }) => {
+const Modal: FC<T_Modal> = ({
+  children,
+  contents,
+  contentsTitle,
+  onClose,
+  modalType,
+  modalTargetOffset,
+}) => {
   const modalId = useId();
   const targetRef = useRef<HTMLButtonElement>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -19,11 +29,28 @@ const Modal: FC<T_Modal> = ({ children, contents, contentsTitle, onClose }) => {
     };
   }, []);
 
+  const topOffset = targetRef.current?.offsetTop
+    ? targetRef.current.offsetTop + targetRef.current.offsetHeight
+    : 0;
+
+  const leftOffset = targetRef.current?.offsetLeft
+    ? modalTargetOffset
+      ? targetRef.current?.offsetLeft -
+        modalTargetOffset +
+        targetRef.current.offsetWidth
+      : targetRef.current?.offsetLeft
+    : 0;
+
   const modalData: T_ModalPortalData = {
     modalId,
     contentsTitle,
     isOpen,
+
     shouldFadeOut: shouldFadeOut,
+    targetPosition: {
+      top: topOffset,
+      left: leftOffset,
+    },
     close: () => {
       onClose && onClose();
       setFadeOut(true);
@@ -41,7 +68,7 @@ const Modal: FC<T_Modal> = ({ children, contents, contentsTitle, onClose }) => {
 
   return (
     <>
-      <Button
+      <ModalButton
         aria-haspopup="dialog"
         aria-controls={modalId}
         aria-expanded={isOpen}
@@ -50,18 +77,39 @@ const Modal: FC<T_Modal> = ({ children, contents, contentsTitle, onClose }) => {
         onClick={modalData.isOpen ? modalData.close : modalData.open}
       >
         {children}
-      </Button>
-      {isOpen && <ModalPortal {...modalData}>{contents}</ModalPortal>}
+      </ModalButton>
+
+      {isOpen &&
+        document &&
+        (modalType === "menu"
+          ? createPortal(<Menu {...modalData}>{contents}</Menu>, document.body)
+          : modalType === "popup"
+          ? createPortal(
+              <Popup {...modalData}>{contents}</Popup>,
+              document.body
+            )
+          : null)}
     </>
   );
 };
 
 export default Modal;
 
+const ModalButton = styled.button`
+  border: none;
+  background-color: transparent;
+  color: inherit;
+  &:hover {
+    background-color: transparent;
+  }
+`;
+
 export type T_Modal = {
   contentsTitle: string;
   contents: React.ReactNode;
   onClose?: () => void;
+  modalType: "menu" | "popup";
+  modalTargetOffset?: number;
 } & T_Children;
 
 export type T_ModalPortalData = {
@@ -69,6 +117,7 @@ export type T_ModalPortalData = {
   contentsTitle: string;
   isOpen: boolean;
   shouldFadeOut?: boolean;
+  targetPosition: { top: number; left: number };
   close: () => void;
   open: () => void;
 };

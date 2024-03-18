@@ -1,12 +1,11 @@
-import { getFirstFocusableElement } from "@/lib/focus-utils";
 import { T_Children } from "@/lib/types";
 import { FC, KeyboardEvent, useEffect, useRef } from "react";
-import { createPortal } from "react-dom";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { T_ModalPortalData } from "./Modal";
-import { MEDIA_QUERIES } from "@/lib/constants";
+import { FADE_IN, MEDIA_QUERIES, SCALE_UP } from "@/lib/constants";
+import { getFirstFocusableElement } from "@/lib/utils";
 
-const ModalPortal: FC<T_Children & T_ModalPortalData> = ({
+const Popup: FC<T_Children & T_ModalPortalData> = ({
   children,
   isOpen,
   close,
@@ -50,58 +49,33 @@ const ModalPortal: FC<T_Children & T_ModalPortalData> = ({
     }
   };
   return (
-    document &&
-    createPortal(
-      <ContentsBackground
-        id={modalId}
-        role="dialog"
-        aria-modal={true}
-        aria-label={contentsTitle}
-        onKeyDown={handleFocusTrap}
-        ref={modalWindowRef}
-        style={{
-          transition: "opacity 0.2s ease-in-out",
-          opacity: shouldFadeOut ? 0 : 1,
-        }}
-      >
-        <BackgroundCloseArea onClick={close} />
-        <ContentsContainer onClick={focusFirstElement}>
-          {children}
-          <ContentsCloseBtn
-            ref={closeBtnRef}
-            aria-label={`Close ${contentsTitle} Modal`}
-            onClick={close}
-          >
-            ❌
-          </ContentsCloseBtn>
-        </ContentsContainer>
-      </ContentsBackground>,
-      document.body
-    )
+    <ContentsBackground
+      id={modalId}
+      role="dialog"
+      aria-modal={true}
+      aria-label={contentsTitle}
+      onKeyDown={handleFocusTrap}
+      ref={modalWindowRef}
+      $shouldFadeOut={shouldFadeOut || false}
+    >
+      <BackgroundCloseArea onClick={close} />
+      <ContentsContainer onClick={focusFirstElement}>
+        {children}
+        <ContentsCloseBtn
+          ref={closeBtnRef}
+          aria-label={`Close ${contentsTitle} Modal`}
+          onClick={close}
+        >
+          ❌
+        </ContentsCloseBtn>
+      </ContentsContainer>
+    </ContentsBackground>
   );
 };
 
-export default ModalPortal;
+export default Popup;
 
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }`;
-
-const scaleUp = keyframes`
-    from {
-        transform: scale(0);
-        transform: translateY(4rem)
-    }
-    to {
-        transform: scale(1);
-        transform: translateY(0px)
-    }`;
-
-const ContentsBackground = styled.div`
+const ContentsBackground = styled.div<{ $shouldFadeOut: boolean }>`
   background-color: rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   position: fixed;
@@ -115,7 +89,9 @@ const ContentsBackground = styled.div`
   justify-content: center;
   align-items: center;
   padding: 2rem;
-  animation: ${fadeIn} 0.2s ease-in-out;
+  opacity: ${({ $shouldFadeOut }) => ($shouldFadeOut ? 0 : 1)};
+  transition: opacity 0.2s ease-in-out;
+  animation: ${FADE_IN} 0.2s ease-in-out;
   z-index: 9999;
 `;
 
@@ -142,7 +118,7 @@ const ContentsContainer = styled.div`
   align-items: center;
   position: relative;
   z-index: 2;
-  animation: ${scaleUp} 0.2s ease-in-out;
+  animation: ${SCALE_UP} 0.2s ease-in-out;
 `;
 
 const ContentsCloseBtn = styled.button`

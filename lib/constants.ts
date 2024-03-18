@@ -1,3 +1,5 @@
+import { keyframes } from "styled-components";
+
 export const MEDIA_QUERIES = {
   sm: 640,
   md: 768,
@@ -6,10 +8,10 @@ export const MEDIA_QUERIES = {
 };
 
 export const PAGE_MAX_WIDTH = {
-  sm: "640px",
-  md: "768px",
-  lg: "1024px",
-  xl: "1280px",
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
 };
 
 export const COLORS = {
@@ -19,3 +21,21 @@ export const COLORS = {
   background: "#f0f0f0",
   text: "#333",
 };
+
+export const FADE_IN = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }`;
+
+export const SCALE_UP = keyframes`
+    from {
+        transform: scale(0);
+        transform: translateY(4rem)
+    }
+    to {
+        transform: scale(1);
+        transform: translateY(0px)
+    }`;
