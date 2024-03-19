@@ -59,7 +59,6 @@ const NavElement = styled.nav`
   background-color: #000;
   color: #fff;
   position: fixed;
-  font-size: 1;
   top: 0;
   left: 0;
   z-index: 1000;
@@ -69,9 +68,9 @@ const MenuSpan = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem;
+  padding: 0.7rem;
   gap: 0.5rem;
-  font-size: 1;
+  font-size: 0.9rem;
   text-decoration: none;
   color: #fff;
   transition: 0.3s ease-in-out;
@@ -99,9 +98,10 @@ const NavItem = styled(Link)`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem;
+  padding: 0.7rem;
   gap: 0.5rem;
   text-decoration: none;
+  font-size: 0.9rem;
   background-color: #000;
   color: #fff;
   transition: 0.3s ease-in-out;

@@ -17,7 +17,7 @@ export default function RootLayout({
         className={inter.className}
         suppressHydrationWarning={true}
         style={{
-          maxWidth: "100vw",
+          maxWidth: "100%",
           overflowX: "hidden",
         }}
       >

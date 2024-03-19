@@ -15,7 +15,7 @@ export const PAGE_MAX_WIDTH = {
 };
 
 export const COLORS = {
-  primary: "#0070f3",
+  primary: "#e61063",
   secondary: "#ff0080",
   accent: "#79ffe1",
   background: "#f0f0f0",

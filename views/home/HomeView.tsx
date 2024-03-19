@@ -1,5 +1,6 @@
 "use client";
 import { Button, Container, Modal, Section, Wrapper } from "@/components";
+import DatePicker from "@/components/date-picker/DatePicker";
 import { T_HomepageData } from "@/data/page-data/homepage-data";
 import React, { FC } from "react";
 
@@ -39,10 +40,16 @@ const HomeView: FC<T_HomepageData> = ({ title }) => {
           <Modal
             modalType="popup"
             contentsTitle="Some modal"
-            contents={<SomeItem />}
+            contents={<DatePicker />}
           >
             Modal
           </Modal>
+
+          <br />
+          <br />
+          <br />
+
+          <br />
         </Container>
       </Wrapper>
     </Section>

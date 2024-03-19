@@ -108,14 +108,13 @@ const ContentsContainer = styled.div`
   background-color: white;
   border-radius: 5px;
   box-shadow: 0 1rem 5rem 0.5rem rgba(0, 0, 0, 0.1);
-  padding: 2rem;
   width: 100%;
   max-width: ${MEDIA_QUERIES.md}px;
   height: 70%;
   overflow: auto;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   position: relative;
   z-index: 2;
   animation: ${SCALE_UP} 0.2s ease-in-out;

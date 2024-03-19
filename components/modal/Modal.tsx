@@ -45,7 +45,6 @@ const Modal: FC<T_Modal> = ({
     modalId,
     contentsTitle,
     isOpen,
-
     shouldFadeOut: shouldFadeOut,
     targetPosition: {
       top: topOffset,
@@ -99,6 +98,7 @@ const ModalButton = styled.button`
   border: none;
   background-color: transparent;
   color: inherit;
+  cursor: pointer;
   &:hover {
     background-color: transparent;
   }
