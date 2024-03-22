@@ -2,7 +2,7 @@ import { T_Children } from "@/lib/types";
 import { FC, KeyboardEvent, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { T_ModalPortalData } from "./Modal";
-import { FADE_IN, MEDIA_QUERIES, SCALE_UP } from "@/lib/constants";
+import { COLORS, FADE_IN, MEDIA_QUERIES, SCALE_UP } from "@/lib/constants";
 import { getFirstFocusableElement } from "@/lib/utils";
 
 const Popup: FC<T_Children & T_ModalPortalData> = ({
@@ -60,14 +60,16 @@ const Popup: FC<T_Children & T_ModalPortalData> = ({
     >
       <BackgroundCloseArea onClick={close} />
       <ContentsContainer onClick={focusFirstElement}>
-        {children}
-        <ContentsCloseBtn
-          ref={closeBtnRef}
-          aria-label={`Close ${contentsTitle} Modal`}
-          onClick={close}
-        >
-          ❌
-        </ContentsCloseBtn>
+        <ContentsContainerInner>
+          {children}
+          <ContentsCloseBtn
+            ref={closeBtnRef}
+            aria-label={`Close ${contentsTitle} Modal`}
+            onClick={close}
+          >
+            ❌
+          </ContentsCloseBtn>
+        </ContentsContainerInner>
       </ContentsContainer>
     </ContentsBackground>
   );
@@ -105,19 +107,36 @@ const BackgroundCloseArea = styled.div`
 `;
 
 const ContentsContainer = styled.div`
-  background-color: white;
-  border-radius: 5px;
+  background: linear-gradient(
+    135deg,
+    ${COLORS.primary}02,
+    ${COLORS.primary}22,
+    ${COLORS.primary}55
+  );
+  border-radius: 1rem;
   box-shadow: 0 1rem 5rem 0.5rem rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: ${MEDIA_QUERIES.md}px;
-  height: 70%;
-  overflow: auto;
+  height: 90%;
+
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
   position: relative;
   z-index: 2;
+  padding: 0.25rem;
   animation: ${SCALE_UP} 0.2s ease-in-out;
+`;
+
+const ContentsContainerInner = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  background-color: white;
+  border-radius: 0.7rem;
+  overflow: auto;
 `;
 
 const ContentsCloseBtn = styled.button`

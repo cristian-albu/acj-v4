@@ -2,6 +2,7 @@
 import { Button, Container, Modal, Section, Wrapper } from "@/components";
 import DatePicker from "@/components/date-picker/DatePicker";
 import { T_HomepageData } from "@/data/page-data/homepage-data";
+import { buildsMonths } from "@/lib/utils";
 import React, { FC } from "react";
 
 const SomeItem = () => {
@@ -14,6 +15,7 @@ const SomeItem = () => {
 };
 
 const HomeView: FC<T_HomepageData> = ({ title }) => {
+  console.table(buildsMonths(12));
   return (
     <Section>
       <Wrapper>
@@ -40,7 +42,12 @@ const HomeView: FC<T_HomepageData> = ({ title }) => {
           <Modal
             modalType="popup"
             contentsTitle="Some modal"
-            contents={<DatePicker />}
+            contents={
+              <DatePicker
+                setDateChoice={(date) => console.log(date)}
+                months={13}
+              />
+            }
           >
             Modal
           </Modal>

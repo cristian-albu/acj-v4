@@ -10,9 +10,19 @@ const ButtonElement = styled.button`
   background-color: #000;
   color: #fff;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
   transition: background-color 0.3s ease-in-out;
   &:hover {
     background-color: #595959;
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    color: #333;
+    cursor: not-allowed;
   }
 `;
 

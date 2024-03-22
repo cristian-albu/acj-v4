@@ -1,107 +1,104 @@
 "use client";
 import { COLORS, FADE_IN, SCALE_UP } from "@/lib/constants";
-import { generateDateList } from "@/lib/utils";
-import React, { ChangeEvent, useId, useMemo, useState } from "react";
+import {
+  T_MonthObject,
+  buildFiller,
+  buildsMonths,
+  days,
+  generateDateList,
+  getMonthName,
+} from "@/lib/utils";
+import React, { ChangeEvent, FC, useId, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Button, Title } from "..";
-import { HiMiniCheck } from "react-icons/hi2";
+import {
+  HiArrowSmallLeft,
+  HiArrowSmallRight,
+  HiMiniCheck,
+} from "react-icons/hi2";
 
 const today = new Date();
-const currMonth = today.getMonth();
-const computedNextMonth = currMonth + 1 >= 12 ? 1 : currMonth + 1;
 
-const currMonthArr = generateDateList(currMonth);
-const nextMonthArr = generateDateList(computedNextMonth);
+type T_DatePickerProps = {
+  setDateChoice: (choice: Date) => void;
+  months: number;
+};
 
-const prevFiller: string[] = [];
-const prevFillterFirstDay = currMonthArr[0].getDay();
-const prevFillerMaxIndex =
-  prevFillterFirstDay - 1 >= 0
-    ? prevFillterFirstDay - 1
-    : 6 - prevFillterFirstDay;
-
-const nextFiller: string[] = [];
-const nextFillerFirstDay = nextMonthArr[0].getDay();
-const nextFillerMaxIndex =
-  nextFillerFirstDay - 1 >= 0 ? nextFillerFirstDay - 1 : 6 - nextFillerFirstDay;
-
-for (let i = 0; i < prevFillerMaxIndex; i++) {
-  prevFiller.push(i.toString());
-}
-
-for (let i = 0; i < nextFillerMaxIndex; i++) {
-  nextFiller.push(i.toString());
-}
-
-const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const currMonthName = today.toLocaleString("default", { month: "long" });
-const nextMonthName = nextMonthArr[0].toLocaleString("default", {
-  month: "long",
-});
-
-const DatePicker = () => {
+const DatePicker: FC<T_DatePickerProps> = ({ setDateChoice, months }) => {
   const id = useId();
-  const [dateChoice, setDateChoice] = useState<null | Date>(null);
-  const [dateList, setDateList] = useState<Date[]>(currMonthArr);
 
-  const isFirst = dateList[0].getMonth() === currMonth;
+  const monthArr = useMemo(() => buildsMonths(months), [months]);
+
+  const [dateChoice, setDateChoiceState] = useState<null | Date>(null);
+  const [dateList, setDateList] = useState<T_MonthObject>(monthArr[0]);
+  const monthIndex = monthArr.findIndex((e) => e.index === dateList.index);
 
   const handleDateChoice = (e: ChangeEvent<HTMLFormElement>) => {
-    setDateChoice(new Date(e.target.value));
+    const choice = new Date(e.target.value);
+    setDateChoiceState(choice);
+    setDateChoice(choice);
   };
 
-  const handleButton = () => {
-    if (isFirst) {
-      setDateList(nextMonthArr);
-      return;
-    } else {
-      setDateList(currMonthArr);
+  const handleNext = () => {
+    if (monthIndex < monthArr.length - 1) {
+      setDateList(monthArr[monthIndex + 1]);
     }
   };
 
+  const handlePrevious = () => {
+    if (monthIndex > 0) {
+      setDateList(monthArr[monthIndex - 1]);
+    }
+  };
+
+  console.log(monthIndex, monthArr.length);
   return (
     <DateItemsContainer
       onChange={handleDateChoice}
       onSubmit={(e) => e.preventDefault()}
     >
       <Row>
-        <Title>{isFirst ? currMonthName : nextMonthName}</Title>
-        <Button onClick={handleButton}>
-          {isFirst ? (
-            <>
-              {nextMonthName} {">"}
-            </>
-          ) : (
-            <>
-              {"<"} {currMonthName}
-            </>
-          )}
+        <Title>{dateList.monthName}</Title>
+
+        <Button onClick={handlePrevious} disabled={monthIndex <= 0}>
+          <HiArrowSmallLeft />
+        </Button>
+
+        <Button
+          onClick={handleNext}
+          disabled={monthIndex >= monthArr.length - 1}
+        >
+          <HiArrowSmallRight />
         </Button>
       </Row>
       {days.map((e) => (
         <DateFiller key={e}>{e}</DateFiller>
       ))}
-      {isFirst
-        ? prevFiller.map((e) => <DateFiller key={e} />)
-        : nextFiller.map((e) => <DateFiller key={e} />)}
+      {dateList.monthFiller.map((e) => (
+        <DateFiller key={e} />
+      ))}
 
-      {dateList.map((e, index) => {
+      {dateList.monthDates.map((e, index) => {
         const isPreviousDate =
-          index <= today.getDate() - 1 && currMonth === e.getMonth();
-        const displayText = e.toDateString().split(" ")[2];
-        const isToday = e.toDateString() === today.toDateString();
-        const isChosen = dateChoice?.toDateString() === e.toDateString();
+          index <= today.getDate() - 1 && today.getMonth() === e.getMonth();
         return (
-          <DateItemElementLabel key={e.toString()} $disabled={isPreviousDate}>
+          <DateItemElementLabel
+            key={e.toString()}
+            $disabled={isPreviousDate}
+            $animationDelay={(index + 1) * 15}
+          >
             <DateItemElementInput
               type="radio"
               name={id}
               value={e.toDateString()}
               disabled={isPreviousDate}
+              defaultChecked={dateChoice?.toDateString() === e.toDateString()}
             />
             <DateItemElement>
-              {isToday ? "Today" : displayText}
-              {isChosen && (
+              {e.toDateString() === today.toDateString()
+                ? "Today"
+                : e.toDateString().split(" ")[2]}
+              {dateChoice?.toDateString() === e.toDateString() && (
                 <ChoiceIcon>
                   <HiMiniCheck />
                 </ChoiceIcon>
@@ -138,6 +135,7 @@ const DateItemElement = styled.div<{ $today?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
   outline: 2px solid #d2d2d2;
   outline-offset: -1px;
   transition: all 200ms;
@@ -145,12 +143,19 @@ const DateItemElement = styled.div<{ $today?: boolean }>`
   color: ${({ $today }) => ($today ? COLORS.primary : "inherit")};
 `;
 
-const DateItemElementLabel = styled.label<{ $disabled?: boolean }>`
+const DateItemElementLabel = styled.label<{
+  $disabled?: boolean;
+  $animationDelay: number;
+}>`
   width: 100%;
   max-width: calc(100% / 7);
   display: flex;
   flex-direction: column;
   cursor: pointer;
+  position: relative;
+  opacity: 0;
+  animation: ${FADE_IN} 0.2s ease-in-out forwards;
+  animation-delay: ${({ $animationDelay }) => $animationDelay}ms;
 
   ${DateItemElementInput}:checked + ${DateItemElement} {
     outline-color: ${COLORS.primary};
