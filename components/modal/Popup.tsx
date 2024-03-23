@@ -117,7 +117,7 @@ const ContentsContainer = styled.div`
   box-shadow: 0 1rem 5rem 0.5rem rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: ${MEDIA_QUERIES.md}px;
-  height: 90%;
+  height: 70vh;
 
   display: flex;
   justify-content: flex-start;

@@ -1,13 +1,6 @@
 "use client";
 import { COLORS, FADE_IN, SCALE_UP } from "@/lib/constants";
-import {
-  T_MonthObject,
-  buildFiller,
-  buildsMonths,
-  days,
-  generateDateList,
-  getMonthName,
-} from "@/lib/utils";
+import { T_MonthObject, buildsMonths, days } from "@/lib/utils";
 import React, { ChangeEvent, FC, useId, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Button, Title } from "..";
@@ -30,8 +23,7 @@ const DatePicker: FC<T_DatePickerProps> = ({ setDateChoice, months }) => {
   const monthArr = useMemo(() => buildsMonths(months), [months]);
 
   const [dateChoice, setDateChoiceState] = useState<null | Date>(null);
-  const [dateList, setDateList] = useState<T_MonthObject>(monthArr[0]);
-  const monthIndex = monthArr.findIndex((e) => e.index === dateList.index);
+  const [dateListIndex, setDateListIndex] = useState<number>(0);
 
   const handleDateChoice = (e: ChangeEvent<HTMLFormElement>) => {
     const choice = new Date(e.target.value);
@@ -40,73 +32,80 @@ const DatePicker: FC<T_DatePickerProps> = ({ setDateChoice, months }) => {
   };
 
   const handleNext = () => {
-    if (monthIndex < monthArr.length - 1) {
-      setDateList(monthArr[monthIndex + 1]);
+    if (dateListIndex < monthArr.length - 1) {
+      setDateListIndex((prev) => prev + 1);
     }
   };
 
   const handlePrevious = () => {
-    if (monthIndex > 0) {
-      setDateList(monthArr[monthIndex - 1]);
+    if (dateListIndex > 0) {
+      setDateListIndex((prev) => prev - 1);
     }
   };
 
-  console.log(monthIndex, monthArr.length);
   return (
     <DateItemsContainer
       onChange={handleDateChoice}
       onSubmit={(e) => e.preventDefault()}
     >
       <Row>
-        <Title>{dateList.monthName}</Title>
+        <Title headingSize={2}>{monthArr[dateListIndex].monthName}</Title>
 
-        <Button onClick={handlePrevious} disabled={monthIndex <= 0}>
+        <Button
+          onClick={handlePrevious}
+          disabled={dateListIndex <= 0}
+          aria-label="Previous Month"
+        >
           <HiArrowSmallLeft />
         </Button>
 
+        <ButtonSpace />
         <Button
           onClick={handleNext}
-          disabled={monthIndex >= monthArr.length - 1}
+          disabled={dateListIndex >= monthArr.length - 1}
+          aria-label="Next Month"
         >
           <HiArrowSmallRight />
         </Button>
       </Row>
-      {days.map((e) => (
-        <DateFiller key={e}>{e}</DateFiller>
-      ))}
-      {dateList.monthFiller.map((e) => (
-        <DateFiller key={e} />
-      ))}
 
-      {dateList.monthDates.map((e, index) => {
-        const isPreviousDate =
-          index <= today.getDate() - 1 && today.getMonth() === e.getMonth();
-        return (
-          <DateItemElementLabel
-            key={e.toString()}
-            $disabled={isPreviousDate}
-            $animationDelay={(index + 1) * 15}
-          >
-            <DateItemElementInput
-              type="radio"
-              name={id}
-              value={e.toDateString()}
-              disabled={isPreviousDate}
-              defaultChecked={dateChoice?.toDateString() === e.toDateString()}
-            />
-            <DateItemElement>
-              {e.toDateString() === today.toDateString()
-                ? "Today"
-                : e.toDateString().split(" ")[2]}
-              {dateChoice?.toDateString() === e.toDateString() && (
-                <ChoiceIcon>
-                  <HiMiniCheck />
-                </ChoiceIcon>
-              )}
-            </DateItemElement>
-          </DateItemElementLabel>
-        );
-      })}
+      <DateItemElementLabelContainer>
+        {days.map((e) => (
+          <DateHeading key={e}>{e}</DateHeading>
+        ))}
+        {monthArr[dateListIndex].monthFiller.map((e) => (
+          <DateFiller key={e} />
+        ))}
+        {monthArr[dateListIndex].monthDates.map((e, index) => {
+          const isPreviousDate =
+            index <= today.getDate() - 1 && today.getMonth() === e.getMonth();
+          return (
+            <DateItemElementLabel
+              key={e.toString()}
+              $disabled={isPreviousDate}
+              $animationDelay={(index + 1) * 15}
+            >
+              <DateItemElementInput
+                type="radio"
+                name={id}
+                value={e.toDateString()}
+                disabled={isPreviousDate}
+                defaultChecked={dateChoice?.toDateString() === e.toDateString()}
+              />
+              <DateItemElement>
+                {e.toDateString() === today.toDateString()
+                  ? "Today"
+                  : e.toDateString().split(" ")[2]}
+                {dateChoice?.toDateString() === e.toDateString() && (
+                  <ChoiceIcon>
+                    <HiMiniCheck />
+                  </ChoiceIcon>
+                )}
+              </DateItemElement>
+            </DateItemElementLabel>
+          );
+        })}
+      </DateItemElementLabelContainer>
     </DateItemsContainer>
   );
 };
@@ -120,7 +119,7 @@ const DateItemsContainer = styled.form`
   align-items: center;
   flex-wrap: wrap;
   padding: 2rem;
-  margin: auto;
+  padding-top: 6rem;
 `;
 
 const DateItemElementInput = styled.input`
@@ -128,27 +127,37 @@ const DateItemElementInput = styled.input`
   height: 0px;
 `;
 
+const ButtonSpace = styled.div`
+  padding: 0.5rem;
+`;
+
 const DateItemElement = styled.div<{ $today?: boolean }>`
   width: 100%;
-  padding: 1.2rem 0.4rem;
-  font-size: 0.9rem;
+  padding: 1rem 0.2rem;
+  font-size: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
-  outline: 2px solid #d2d2d2;
-  outline-offset: -1px;
+  border: 2px solid transparent;
   transition: all 200ms;
   z-index: 1;
+  border-radius: 0.5rem;
   color: ${({ $today }) => ($today ? COLORS.primary : "inherit")};
 `;
 
+const DateItemElementLabelContainer = styled.div`
+  width: 100%;
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(7, 1fr);
+`;
 const DateItemElementLabel = styled.label<{
   $disabled?: boolean;
   $animationDelay: number;
 }>`
   width: 100%;
-  max-width: calc(100% / 7);
+
   display: flex;
   flex-direction: column;
   cursor: pointer;
@@ -158,9 +167,8 @@ const DateItemElementLabel = styled.label<{
   animation-delay: ${({ $animationDelay }) => $animationDelay}ms;
 
   ${DateItemElementInput}:checked + ${DateItemElement} {
-    outline-color: ${COLORS.primary};
-    outline: 3px solid ${COLORS.primary};
-    outline-offset: -3px;
+    border-color: ${COLORS.primary};
+    border: 2px solid ${COLORS.primary};
     z-index: 5;
     color: ${COLORS.primary};
     font-weight: bold;
@@ -172,7 +180,7 @@ const DateItemElementLabel = styled.label<{
     background-color: transparent;
     color: #cdcdcd;
     cursor: default;
-    outline-color: #f1f1f1;
+    border-color: transparent;
   }
 
   &:hover {
@@ -180,7 +188,7 @@ const DateItemElementLabel = styled.label<{
       background-color: ${({ $disabled }) =>
         $disabled ? "transparent" : COLORS.primary};
       color: ${({ $disabled }) => ($disabled ? "inherit" : "white")};
-      outline-color: ${({ $disabled }) => !$disabled && COLORS.primary};
+      border-color: ${({ $disabled }) => !$disabled && COLORS.primary};
     }
 
     ${DateItemElementInput}:checked + ${DateItemElement} {
@@ -195,8 +203,17 @@ const DateFiller = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1.2rem 0.4rem;
+  padding: 1rem 0.2rem;
   color: #cdcdcd;
+`;
+
+const DateHeading = styled.div`
+  border-bottom: 5px solid #f0f0f0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0.2rem;
 `;
 
 const ChoiceIcon = styled.span`

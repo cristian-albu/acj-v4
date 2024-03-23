@@ -1,6 +1,5 @@
 "use client";
 import React, { FC, useEffect, useId, useRef, useState } from "react";
-import { Button } from "..";
 import { T_Children } from "@/lib/types";
 import Popup from "./Popup";
 import Menu from "./Menu";
@@ -9,7 +8,7 @@ import styled from "styled-components";
 
 const Modal: FC<T_Modal> = ({
   children,
-  contents,
+  targetContents,
   contentsTitle,
   onClose,
   modalType,
@@ -75,16 +74,16 @@ const Modal: FC<T_Modal> = ({
         ref={targetRef}
         onClick={modalData.isOpen ? modalData.close : modalData.open}
       >
-        {children}
+        {targetContents}
       </ModalButton>
 
       {isOpen &&
         document &&
         (modalType === "menu"
-          ? createPortal(<Menu {...modalData}>{contents}</Menu>, document.body)
+          ? createPortal(<Menu {...modalData}>{children}</Menu>, document.body)
           : modalType === "popup"
           ? createPortal(
-              <Popup {...modalData}>{contents}</Popup>,
+              <Popup {...modalData}>{children}</Popup>,
               document.body
             )
           : null)}
@@ -106,7 +105,7 @@ const ModalButton = styled.button`
 
 export type T_Modal = {
   contentsTitle: string;
-  contents: React.ReactNode;
+  targetContents: React.ReactNode;
   onClose?: () => void;
   modalType: "menu" | "popup";
   modalTargetOffset?: number;

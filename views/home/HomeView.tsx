@@ -15,7 +15,6 @@ const SomeItem = () => {
 };
 
 const HomeView: FC<T_HomepageData> = ({ title }) => {
-  console.table(buildsMonths(12));
   return (
     <Section>
       <Wrapper>
@@ -29,9 +28,9 @@ const HomeView: FC<T_HomepageData> = ({ title }) => {
           <Modal
             modalType="menu"
             contentsTitle="Some modal 2"
-            contents={<SomeItem />}
+            targetContents={"Menu"}
           >
-            Menu
+            <SomeItem />
           </Modal>
 
           <br />
@@ -42,14 +41,12 @@ const HomeView: FC<T_HomepageData> = ({ title }) => {
           <Modal
             modalType="popup"
             contentsTitle="Some modal"
-            contents={
-              <DatePicker
-                setDateChoice={(date) => console.log(date)}
-                months={13}
-              />
-            }
+            targetContents={"Modal"}
           >
-            Modal
+            <DatePicker
+              setDateChoice={(date) => console.log(date)}
+              months={13}
+            />
           </Modal>
 
           <br />
