@@ -1,6 +1,6 @@
 "use client";
 import { COLORS, FADE_IN, SCALE_UP } from "@/lib/constants";
-import { T_MonthObject, buildsMonths, days } from "@/lib/utils";
+import { buildsMonths, days } from "@/lib/utils";
 import React, { ChangeEvent, FC, useId, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Button, Title } from "..";
@@ -12,7 +12,7 @@ import {
 
 const today = new Date();
 
-type T_DatePickerProps = {
+export type T_DatePickerProps = {
   setDateChoice: (choice: Date) => void;
   months: number;
 };

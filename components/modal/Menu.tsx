@@ -6,7 +6,6 @@ import styled from "styled-components";
 import { FADE_IN } from "@/lib/constants";
 import useDetectClickTarget from "@/lib/useDetectOutsideClick";
 import { usePathname } from "next/navigation";
-import { getFirstFocusableElement, getLastFocusableElement } from "@/lib/utils";
 
 const Menu: FC<T_Children & T_ModalPortalData> = ({
   children,
@@ -20,40 +19,13 @@ const Menu: FC<T_Children & T_ModalPortalData> = ({
   const clickTarget = useDetectClickTarget();
   const path = usePathname();
 
-  useEffect(() => {
-    if (ref.current) {
-      getFirstFocusableElement(ref.current)?.focus();
-    }
-  }, []);
+  console.log(targetPosition);
 
   useEffect(() => {
     if (clickTarget && ref.current && !ref.current.contains(clickTarget)) {
       close();
     }
   }, [clickTarget, path]);
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") {
-      close();
-    }
-
-    if (e.key === "Tab") {
-      const firstFocusableElement = getFirstFocusableElement(ref.current);
-      const lastFocusableElement = getLastFocusableElement(ref.current);
-
-      if (e.shiftKey) {
-        if (document.activeElement === firstFocusableElement) {
-          e.preventDefault();
-          lastFocusableElement?.focus();
-        }
-      } else {
-        if (document.activeElement === lastFocusableElement) {
-          e.preventDefault();
-          firstFocusableElement?.focus();
-        }
-      }
-    }
-  };
 
   return (
     <MenuElement
@@ -62,10 +34,7 @@ const Menu: FC<T_Children & T_ModalPortalData> = ({
       aria-modal={true}
       aria-label={contentsTitle}
       ref={ref}
-      $left={targetPosition.left}
-      $top={targetPosition.top}
       $shouldFadeOut={shouldFadeOut || false}
-      onKeyDown={handleKeyDown}
     >
       {children}
     </MenuElement>
@@ -75,13 +44,9 @@ const Menu: FC<T_Children & T_ModalPortalData> = ({
 export default Menu;
 
 const MenuElement = styled.div<{
-  $left: number;
-  $top: number;
   $shouldFadeOut: boolean;
 }>`
   position: absolute;
-  top: ${({ $top }) => $top}px;
-  left: ${({ $left }) => $left}px;
   z-index: 100;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   display: flex;

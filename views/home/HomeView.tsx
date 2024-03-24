@@ -1,8 +1,8 @@
 "use client";
 import { Button, Container, Modal, Section, Wrapper } from "@/components";
+import { ButtonDiv } from "@/components/button/Button";
 import DatePicker from "@/components/date-picker/DatePicker";
 import { T_HomepageData } from "@/data/page-data/homepage-data";
-import { buildsMonths } from "@/lib/utils";
 import React, { FC } from "react";
 
 const SomeItem = () => {
@@ -28,7 +28,7 @@ const HomeView: FC<T_HomepageData> = ({ title }) => {
           <Modal
             modalType="menu"
             contentsTitle="Some modal 2"
-            targetContents={"Menu"}
+            targetContents={<ButtonDiv>Menu</ButtonDiv>}
           >
             <SomeItem />
           </Modal>
@@ -41,7 +41,7 @@ const HomeView: FC<T_HomepageData> = ({ title }) => {
           <Modal
             modalType="popup"
             contentsTitle="Some modal"
-            targetContents={"Modal"}
+            targetContents={<ButtonDiv>Date picker</ButtonDiv>}
           >
             <DatePicker
               setDateChoice={(date) => console.log(date)}

@@ -1,13 +1,11 @@
 import { T_Children } from "@/lib/types";
-import { FC, KeyboardEvent, useEffect, useRef } from "react";
+import { FC, useRef } from "react";
 import styled from "styled-components";
 import { T_ModalPortalData } from "./Modal";
 import { COLORS, FADE_IN, MEDIA_QUERIES, SCALE_UP } from "@/lib/constants";
-import { getFirstFocusableElement } from "@/lib/utils";
 
 const Popup: FC<T_Children & T_ModalPortalData> = ({
   children,
-  isOpen,
   close,
   modalId,
   contentsTitle,
@@ -16,50 +14,17 @@ const Popup: FC<T_Children & T_ModalPortalData> = ({
   const modalWindowRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
 
-  const focusFirstElement = () => {
-    getFirstFocusableElement(modalWindowRef.current)?.focus();
-  };
-
-  useEffect(() => {
-    if (isOpen) {
-      focusFirstElement();
-    }
-  }, [isOpen]);
-
-  const handleFocusTrap = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Escape") {
-      e.preventDefault();
-      close();
-    }
-    if (e.key === "Tab") {
-      const active = document.activeElement;
-      const firstFocusableElement = getFirstFocusableElement(
-        modalWindowRef.current
-      );
-
-      if (active === closeBtnRef.current) {
-        e.preventDefault();
-        firstFocusableElement?.focus();
-      }
-
-      if (e.shiftKey && active === firstFocusableElement) {
-        e.preventDefault();
-        closeBtnRef.current && closeBtnRef.current.focus();
-      }
-    }
-  };
   return (
     <ContentsBackground
       id={modalId}
       role="dialog"
       aria-modal={true}
       aria-label={contentsTitle}
-      onKeyDown={handleFocusTrap}
       ref={modalWindowRef}
       $shouldFadeOut={shouldFadeOut || false}
     >
       <BackgroundCloseArea onClick={close} />
-      <ContentsContainer onClick={focusFirstElement}>
+      <ContentsContainer>
         <ContentsContainerInner>
           {children}
           <ContentsCloseBtn

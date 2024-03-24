@@ -1,5 +1,12 @@
 "use client";
-import React, { FC, useEffect, useId, useRef, useState } from "react";
+import React, {
+  FC,
+  ReactNode,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 import { T_Children } from "@/lib/types";
 import Popup from "./Popup";
 import Menu from "./Menu";
@@ -12,7 +19,6 @@ const Modal: FC<T_Modal> = ({
   contentsTitle,
   onClose,
   modalType,
-  modalTargetOffset,
 }) => {
   const modalId = useId();
   const targetRef = useRef<HTMLButtonElement>(null);
@@ -28,27 +34,12 @@ const Modal: FC<T_Modal> = ({
     };
   }, []);
 
-  const topOffset = targetRef.current?.offsetTop
-    ? targetRef.current.offsetTop + targetRef.current.offsetHeight
-    : 0;
-
-  const leftOffset = targetRef.current?.offsetLeft
-    ? modalTargetOffset
-      ? targetRef.current?.offsetLeft -
-        modalTargetOffset +
-        targetRef.current.offsetWidth
-      : targetRef.current?.offsetLeft
-    : 0;
-
   const modalData: T_ModalPortalData = {
     modalId,
     contentsTitle,
     isOpen,
     shouldFadeOut: shouldFadeOut,
-    targetPosition: {
-      top: topOffset,
-      left: leftOffset,
-    },
+    targetPosition: targetRef.current?.getBoundingClientRect() || null,
     close: () => {
       onClose && onClose();
       setFadeOut(true);
@@ -105,7 +96,7 @@ const ModalButton = styled.button`
 
 export type T_Modal = {
   contentsTitle: string;
-  targetContents: React.ReactNode;
+  targetContents: ReactNode;
   onClose?: () => void;
   modalType: "menu" | "popup";
   modalTargetOffset?: number;
@@ -116,7 +107,7 @@ export type T_ModalPortalData = {
   contentsTitle: string;
   isOpen: boolean;
   shouldFadeOut?: boolean;
-  targetPosition: { top: number; left: number };
+  targetPosition: DOMRect | null;
   close: () => void;
   open: () => void;
 };
