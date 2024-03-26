@@ -70,9 +70,21 @@ const DatePicker: FC<T_DatePickerProps> = ({ setDateChoice, months }) => {
       </Row>
 
       <DateItemElementLabelContainer>
-        {days.map((e) => (
-          <DateHeading key={e}>{e}</DateHeading>
-        ))}
+        {days.map((e) => {
+          const colChecked =
+            (dateChoice && e === dateChoice.toString().split(" ")[0]) || false;
+
+          const isSameMonth =
+            (dateChoice &&
+              dateChoice.getMonth() ===
+                monthArr[dateListIndex].monthDates[0].getMonth()) ||
+            false;
+          return (
+            <DateHeading key={e} $colChecked={colChecked && isSameMonth}>
+              {e}
+            </DateHeading>
+          );
+        })}
         {monthArr[dateListIndex].monthFiller.map((e) => (
           <DateFiller key={e} />
         ))}
@@ -163,6 +175,7 @@ const DateItemElementLabel = styled.label<{
   cursor: pointer;
   position: relative;
   opacity: 0;
+  overflow: hidden;
   animation: ${FADE_IN} 0.2s ease-in-out forwards;
   animation-delay: ${({ $animationDelay }) => $animationDelay}ms;
 
@@ -170,7 +183,7 @@ const DateItemElementLabel = styled.label<{
     border-color: ${COLORS.primary};
     border: 2px solid ${COLORS.primary};
     z-index: 5;
-    color: ${COLORS.primary};
+    color: black;
     font-weight: bold;
     position: relative;
   }
@@ -187,12 +200,12 @@ const DateItemElementLabel = styled.label<{
     ${DateItemElement} {
       background-color: ${({ $disabled }) =>
         $disabled ? "transparent" : COLORS.primary};
-      color: ${({ $disabled }) => ($disabled ? "inherit" : "white")};
+      color: ${({ $disabled }) => ($disabled ? "inherit" : "black")};
       border-color: ${({ $disabled }) => !$disabled && COLORS.primary};
     }
 
     ${DateItemElementInput}:checked + ${DateItemElement} {
-      color: white;
+      color: black;
     }
   }
 `;
@@ -207,8 +220,10 @@ const DateFiller = styled.div`
   color: #cdcdcd;
 `;
 
-const DateHeading = styled.div`
-  border-bottom: 5px solid #f0f0f0;
+const DateHeading = styled.div<{ $colChecked: boolean }>`
+  transition: border-bottom 0.2s ease-in-out;
+  border-bottom: 5px solid
+    ${({ $colChecked }) => ($colChecked ? COLORS.primary : "#f0f0f0")};
   width: 100%;
   display: flex;
   justify-content: center;

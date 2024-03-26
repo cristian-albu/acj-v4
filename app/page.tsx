@@ -5,7 +5,6 @@ import { getEvents } from "@/lib/calendar-client";
 
 const HomePage = async () => {
   const events = await getEvents();
-  console.log(events);
 
   return <HomeView {...homepageData.data} />;
 };

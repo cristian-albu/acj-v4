@@ -1,4 +1,5 @@
 "use client";
+import { COLORS } from "@/lib/constants";
 import { T_Children } from "@/lib/types";
 import React, { ButtonHTMLAttributes, forwardRef, Ref } from "react";
 import styled, { css } from "styled-components";
@@ -28,10 +29,11 @@ const buttonStyles = css`
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.15s ease-in-out, colors 0.15s ease-in-out;
 
   &:hover {
-    background-color: #595959;
+    background-color: ${COLORS.primary};
+    color: black;
   }
 
   &:disabled {

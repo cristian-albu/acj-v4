@@ -72,18 +72,12 @@ const BackgroundCloseArea = styled.div`
 `;
 
 const ContentsContainer = styled.div`
-  background: linear-gradient(
-    135deg,
-    ${COLORS.primary}02,
-    ${COLORS.primary}22,
-    ${COLORS.primary}55
-  );
+  background: linear-gradient(135deg, ${COLORS.secondary}, ${COLORS.primary});
   border-radius: 1rem;
   box-shadow: 0 1rem 5rem 0.5rem rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: ${MEDIA_QUERIES.md}px;
   height: 70vh;
-
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
